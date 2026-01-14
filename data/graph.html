@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #222222;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#FF6B6B", "font": {"color": "white"}, "id": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:0", "label": "Regular expressions.pdf", "shape": "dot", "title": "Paper"}, {"color": "#4ECDC4", "font": {"color": "white"}, "id": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:1", "label": "\u2696\ufe0f SKEPTIC: I\u0027v...", "shape": "dot", "title": "\u2696\ufe0f SKEPTIC: I\u0027ve reviewed the researcher\u0027s findings, and I\u0027m underwhelmed. The claim of high accuracy is based on a single data point (98.5%) without any context or supporting evidence. The comparison to Model B is meaningless without accuracy data. The researcher\u0027s cautious tone is warranted, but it\u0027s not enough to save this flawed analysis.\n\nThe lack of information on dataset, sample size, evaluation metrics, standard deviation, and variance is staggering. This is not a rigorous analysis, but a superficial glance at a single metric. I reject the claim of high accuracy until more comprehensive data is provided."}, {"color": "#4ECDC4", "font": {"color": "white"}, "id": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:2", "label": "\u2696\ufe0f SKEPTIC: Und...", "shape": "dot", "title": "\u2696\ufe0f SKEPTIC: Underwhelming analysis. The researcher\u0027s findings are based on assumptions, not concrete evidence, as the actual text is missing. The 98.5% accuracy claim is accepted at face value, without scrutinizing the methodology or sampling size. This lack of critical examination renders the conclusion meaningless. Furthermore, the researcher\u0027s caveat about potential discrepancies is a hollow attempt to appear objective. Overall, this review is a toothless exercise in confirmation bias."}, {"color": "#4ECDC4", "font": {"color": "white"}, "id": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:3", "label": "\u2696\ufe0f SKEPTIC: Und...", "shape": "dot", "title": "\u2696\ufe0f SKEPTIC: Underwhelming analysis. The researcher\u0027s findings are nothing more than a regurgitation of the provided data, lacking any real critique or depth. \n\nThe claim of \"98.5% accuracy\" is blindly accepted and then immediately questioned, but no concrete evidence is presented to refute it. The researcher requests more data, but fails to provide any alternative explanations or hypotheses.\n\nThe comparison between Model A and Model B is dismissed as irrelevant, but could be a crucial factor in understanding the accuracy claim. The researcher\u0027s demands for additional information are reasonable, but the analysis itself is shallow and unconvincing.\n\nUltimately, this review raises more questions than it answers, and the researcher\u0027s conclusion is a vague call for more data rather than a definitive critique of the claim. Unimpressive."}, {"color": "#4ECDC4", "font": {"color": "white"}, "id": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:4", "label": "\u2696\ufe0f SKEPTIC: I\u0027v...", "shape": "dot", "title": "\u2696\ufe0f SKEPTIC: I\u0027ve reviewed the researcher\u0027s findings, and I\u0027m underwhelmed. The claim of 98.5% accuracy is unsubstantiated due to a glaring lack of comparative data. The researcher\u0027s assumption about the text\u0027s claims is just that - an assumption. Without the actual text, this review is built on shaky ground.\n\nThe comparison between Model A and Model B is fatally flawed, as the accuracy of Model B is nowhere to be found. A 15% speed advantage means nothing without context. The researcher\u0027s recommendation to provide more data is an admission of the study\u0027s inadequacy.\n\nIn conclusion, this research is incomplete, and the findings are unverifiable. I reject the claim of high accuracy until more comprehensive data is provided."}, {"color": "#4ECDC4", "font": {"color": "white"}, "id": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:5", "label": "\u2696\ufe0f SKEPTIC: I r...", "shape": "dot", "title": "\u2696\ufe0f SKEPTIC: I reject the Researcher\u0027s findings due to lack of concrete evidence and reliance on unverified data. The claim of 98.5% accuracy is unsubstantiated without access to the original text and dataset. Furthermore, the comparison between Model A and Model B is meaningless without context, rendering the \"15% faster\" claim baseless. The Researcher\u0027s failure to provide rigorous scrutiny and demand more data undermines the credibility of the entire review. More rigorous testing and data analysis are necessary to support such grand claims."}, {"color": "#4ECDC4", "font": {"color": "white"}, "id": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:6", "label": "\u2696\ufe0f SKEPTIC: Thi...", "shape": "dot", "title": "\u2696\ufe0f SKEPTIC: This research is fundamentally flawed. The entire analysis is based on an assumption about the text, which is not provided. Without the actual text, any conclusions drawn are speculative and unreliable. The researcher\u0027s attempt to validate the data against a hypothetical claim is nothing more than a guess. The lack of concrete evidence and the reliance on assumptions render this research inconclusive and untrustworthy."}, {"color": "#4ECDC4", "font": {"color": "white"}, "id": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:7", "label": "\u2696\ufe0f SKEPTIC: I\u0027m...", "shape": "dot", "title": "\u2696\ufe0f SKEPTIC: I\u0027m not impressed. The researcher\u0027s findings are underwhelming and plagued by ambiguity. \n\nThe claim of 98.5% accuracy is unsubstantiated without the actual text, and the comparison between Model A and Model B is vague and lacks clarity. The latency of 12ms is also unattributed, making it impossible to draw meaningful conclusions.\n\nFurthermore, the researcher\u0027s conclusion that the data supports a claim of high accuracy is premature and lacks concrete evidence. The entire analysis is based on incomplete information, rendering the findings essentially useless.\n\nOverall, this research is incomplete, lacks rigor, and fails to provide any meaningful insights. Back to the drawing board."}, {"color": "#4ECDC4", "font": {"color": "white"}, "id": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:8", "label": "\u2696\ufe0f SKEPTIC: I\u0027v...", "shape": "dot", "title": "\u2696\ufe0f SKEPTIC: I\u0027ve reviewed the researcher\u0027s findings, and I\u0027m underwhelmed. The researcher is making assumptions about the text without actually having it, which is a glaring methodological flaw. The claim of 98.5% accuracy is unsubstantiated, and the comparison between Model A and Model B is lacking in context. \n\nThe researcher\u0027s request for the actual text to \"verify the claims\" is a clear indication that their current analysis is incomplete and unreliable. I reject the findings due to a lack of concrete evidence and blatant assumptions. More rigorous testing and data collection are required to make any credible claims."}, {"color": "#4ECDC4", "font": {"color": "white"}, "id": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:9", "label": "\u2696\ufe0f SKEPTIC: The...", "shape": "dot", "title": "\u2696\ufe0f SKEPTIC: The researcher\u0027s findings are severely lacking. With no actual text provided, the entire analysis is based on assumption, rendering it speculative and unreliable. The 98.5% accuracy claim is also unverified, as there\u0027s no information on the sample size, testing methodology, or potential sources of bias. Furthermore, the researcher fails to consider alternative explanations or potential flaws in the data collection process. This analysis is incomplete and inconclusive, making the claim of \"high accuracy\" nothing more than an unsubstantiated assertion."}, {"color": "#4ECDC4", "font": {"color": "white"}, "id": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:10", "label": "\u2696\ufe0f SKEPTIC: I\u0027v...", "shape": "dot", "title": "\u2696\ufe0f SKEPTIC: I\u0027ve reviewed the researcher\u0027s findings, and I\u0027m underwhelmed. \n\nThe researcher makes a glaring assumption about the text\u0027s claim without actually having the text. This lack of concrete evidence renders the entire analysis speculative. The \"accuracy\" of 98.5% is accepted at face value, without questioning the methodology or sample size used to achieve this result.\n\nThe recommendations to \"obtain the actual text\" and \"verify if the text\u0027s claim matches the reported accuracy\" are painfully obvious and should have been done before publishing the research. The fact that they weren\u0027t is a clear indication of sloppy research practices.\n\nOverall, this research is built on shaky ground, and the claims of high accuracy are unsubstantiated. I\u0027d give this research a solid 0/10 for rigor and methodology. Back to the drawing board."}, {"color": "#4ECDC4", "font": {"color": "white"}, "id": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:11", "label": "\u2696\ufe0f SKEPTIC: Und...", "shape": "dot", "title": "\u2696\ufe0f SKEPTIC: Underwhelming analysis. The researcher fails to adequately scrutinize the findings, instead opting for a superficial examination. \n\nKey issues:\n- Lack of criticism on the 98.5% accuracy claim, which seems suspiciously high.\n- No investigation into potential biases in the dataset or evaluation conditions.\n- Incomplete analysis of Model A and Model B comparison, neglecting to question whether the 15% speed increase is worth potential accuracy trade-offs.\n\nThe researcher\u0027s cautious tone is insufficient; a more rigorous critique is necessary to uncover potential flaws in the research."}, {"color": "#4ECDC4", "font": {"color": "white"}, "id": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:12", "label": "\u2696\ufe0f SKEPTIC: I r...", "shape": "dot", "title": "\u2696\ufe0f SKEPTIC: I reject these findings due to a glaring lack of skepticism. The researcher blindly accepts the 98.5% accuracy claim without questioning the data\u0027s validity or potential sources of error. The request to review the actual text is too little, too late, and the critique of the Model A vs Model B comparison is vague and inconclusive. Where is the rigorous analysis, the testing of assumptions, and the consideration of alternative explanations? This review is superficial and fails to provide meaningful scrutiny."}]);
+                  edges = new vis.DataSet([{"from": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:0", "title": "REVEALED", "to": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:1"}, {"from": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:0", "title": "REVEALED", "to": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:2"}, {"from": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:0", "title": "REVEALED", "to": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:3"}, {"from": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:0", "title": "REVEALED", "to": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:4"}, {"from": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:0", "title": "REVEALED", "to": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:5"}, {"from": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:0", "title": "REVEALED", "to": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:6"}, {"from": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:0", "title": "REVEALED", "to": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:7"}, {"from": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:0", "title": "REVEALED", "to": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:8"}, {"from": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:0", "title": "REVEALED", "to": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:9"}, {"from": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:0", "title": "REVEALED", "to": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:10"}, {"from": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:0", "title": "REVEALED", "to": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:11"}, {"from": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:0", "title": "REVEALED", "to": "4:6c38afd4-0905-4196-97bb-a582edb60c6f:12"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

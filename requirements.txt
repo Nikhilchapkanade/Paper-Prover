@@ -1,0 +1,10 @@
+chainlit
+langchain-google-genai
+langchain-groq
+langgraph
+neo4j
+pypdf
+python-dotenv
+matplotlib
+networkx
+pyvis
